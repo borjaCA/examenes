@@ -4,7 +4,7 @@ public class Manager {
 	private long id;
 	private String telefono;
 	private String direccion;
-
+	private Equipo equipo;
 	// Constructor por defecto
 	public Manager() {
 
@@ -12,6 +12,14 @@ public class Manager {
 
 	public long getId() {
 		return id;
+	}
+
+	public Equipo getEquipo() {
+		return equipo;
+	}
+
+	public void setEquipo(Equipo equipo) {
+		this.equipo = equipo;
 	}
 
 	public void setId(long id) {

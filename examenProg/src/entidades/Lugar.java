@@ -4,6 +4,7 @@ public class Lugar {
 	private String nombre;
 	private String ubicacion;
 	private boolean airelibre;
+	private Prueba[] prueba;
 
 	public String getNombre() {
 		return nombre;
@@ -23,6 +24,14 @@ public class Lugar {
 
 	public boolean isAirelibre() {
 		return airelibre;
+	}
+
+	public Prueba[] getPrueba() {
+		return prueba;
+	}
+
+	public void setPrueba(Prueba[] prueba) {
+		this.prueba = prueba;
 	}
 
 	public void setAirelibre(boolean airelibre) {

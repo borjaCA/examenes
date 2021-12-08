@@ -3,6 +3,7 @@ package entidades;
 public class Plata {
 	private long id;
 	private float pureza;
+	private Resultado resultado;
 
 	public long getId() {
 		return id;
@@ -18,6 +19,15 @@ public class Plata {
 
 	public void setPureza(float pureza) {
 		this.pureza = pureza;
+	}
+
+	
+	public Resultado getResultado() {
+		return resultado;
+	}
+
+	public void setResultado(Resultado resultado) {
+		this.resultado = resultado;
 	}
 
 	@Override

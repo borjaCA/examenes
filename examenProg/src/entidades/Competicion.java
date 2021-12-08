@@ -4,6 +4,7 @@ public class Competicion {
 	private long id;
 	private String nombre;
 	private int anio;
+	private Prueba[] pruebas;
 
 	public long getId() {
 		return id;
@@ -25,10 +26,19 @@ public class Competicion {
 		return anio;
 	}
 
+	public Prueba[] getPruebas() {
+		return pruebas;
+	}
+
+	public void setPruebas(Prueba[] pruebas) {
+		this.pruebas = pruebas;
+	}
+
 	public void setAnio(int anio) {
 		this.anio = anio;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Competicion [id=" + id + ", nombre=" + nombre + ", anio=" + anio + "]";
