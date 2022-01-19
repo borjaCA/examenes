@@ -120,7 +120,7 @@ public class Atleta extends Participante {
 		} while (!valido);
 		valido = false;
 		// validamos el numero de telefono a traves de los nuevos validadores que
-		// hicimos
+		// hicimosh
 		do {
 			System.out.println("introduce un peso mayor que  30.0 kg");
 			peso = in.nextFloat();
