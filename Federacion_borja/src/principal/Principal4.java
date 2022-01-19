@@ -239,8 +239,8 @@ public class Principal4 {
 		/**
 		 * le diria al usuario que eligiese que medallas o que medalla quiere ver con
 		 * uno bucles if por si quiere ver mas de una medalla y con todos los bucles if
-		 * y else if para poder mostrarle todo los distintos tipos de búsqueda
-		 * Pero no me sale como hacerlo bien 
+		 * y else if para poder mostrarle todo los distintos tipos de búsqueda Pero no
+		 * me sale como hacerlo bien
 		 */
 //			break;
 
@@ -273,6 +273,7 @@ public class Principal4 {
 		switch (elecc) {
 		case 1: //// opción 3.1
 			System.out.println("Ha seleccionado FEDERARSE (Nuevo ATLETA).");
+			System.out.println("Introduce los elementos del nuevo atleta");
 			Atleta atleta1 = new Atleta();
 			atleta1 = Atleta.nuevoAtleta();
 			break;
