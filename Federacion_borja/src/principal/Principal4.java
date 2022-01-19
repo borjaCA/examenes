@@ -235,8 +235,15 @@ public class Principal4 {
 			System.out.println(nuevo);
 			break;
 //		case 2:  //opción 1.1.2
-//			System.out.println("Ha seleccionado ");
+//			System.out.println("Ha seleccionado ver medallas ");
+		/**
+		 * le diria al usuario que eligiese que medallas o que medalla quiere ver con
+		 * uno bucles if por si quiere ver mas de una medalla y con todos los bucles if
+		 * y else if para poder mostrarle todo los distintos tipos de búsqueda
+		 * Pero no me sale como hacerlo bien 
+		 */
 //			break;
+
 		default:
 		}
 		System.out.println("Volviendo al menú principal de gestión de medallas...");
