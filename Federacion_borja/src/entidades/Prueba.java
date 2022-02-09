@@ -202,9 +202,27 @@ public class Prueba {
 
 	@Override
 	public String toString() {
-		return "Prueba [id=" + id + ", nombre=" + nombre + ", fecha=" + fecha + ", individual=" + individual
-				+ ", lugar=" + lugar + ", arbitraje=" + Arrays.toString(arbitraje) + ", resultado=" + resultado
-				+ ", participantes=" + Arrays.toString(participantes) + "]";
+		Participante pa = null;
+		String arb = "";
+		String ret1 = "";
+		String ret2 = "";
+		String ret3 = "";
+		String ret = "";
+		ret = this.id + "." + this.nombre + "(" + this.fecha + "en" + this.lugar + ") de tipo" + this.individual + "\n";
+
+		if (this.hayEquipoArbitral() == true) {
+			arb = "Los nombres de los arbitros son" + this.arbitraje + "\n";
+		}
+		if (this.cerrada() == true) {
+			ret1 = "Primer puesto : " + pa.id + ", con el dorsal" + pa.dorsal + " por la calle" + pa.calle + "Oro#"
+					+ resultado.getPrimero() + "\n";
+			ret2 = "Segundo puesto : " + pa.id + ", con el dorsal" + pa.dorsal + " por la calle" + pa.calle + "Oro#"
+					+ resultado.getSegundo() + "\n";
+			ret3 = "Tercer puesto : " + pa.id + ", con el dorsal" + pa.dorsal + " por la calle" + pa.calle + "Oro#"
+					+ resultado.getTercero() + "\n";
+		}
+		;
+		return (ret + arb + ret1 + ret2 + ret3);
 	}
 
 	// Ejercicio 2, parte B

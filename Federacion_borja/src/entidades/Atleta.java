@@ -1,11 +1,16 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 import utils.Datos;
 import validaciones.Validador;
 
-public class Atleta extends Participante {
+public class Atleta extends Participante implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long idAtleta;
 	private float altura;
 	private float peso;
@@ -138,5 +143,11 @@ public class Atleta extends Participante {
 	public String toString() {
 		return persona.getNombre() + "(" + persona.getNifnie() + ") del año " + persona.getFechaNac() + "\t" + peso
 				+ "kgs." + altura + "m.";
+	}
+
+	public String data() {
+		String ret = "";
+		ret = this.getId() + "|" + persona.getNombre();
+		return ret;
 	}
 }

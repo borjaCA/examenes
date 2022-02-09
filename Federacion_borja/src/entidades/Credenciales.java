@@ -29,4 +29,10 @@ public class Credenciales {
 		this.password = password;
 	}
 
+	public String data() {
+		String ret = "";
+
+		ret = this.password + "|" + this.password;
+		return ret;
+	}
 }

@@ -1,5 +1,17 @@
 package principal;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import entidades.*;
@@ -8,69 +20,100 @@ import utils.*;
 public class Principal4 {
 
 	public static void main(String[] args) {
-		Datos.cerrarResultados();
-		System.out.println("INICIO");
 
-		Scanner in;
-		int elecc = -1;
-		Rol rol; // Examen 4 Ejercicio 3A
-		boolean correcto = false;
-		while (true) {
-			System.out.println("Bienvenido al programa de gestión de la FEDERACIÓN DEPORTIVA:");
-			do {
-				System.out.println("Seleccione el id del tipo de usuario o pulse 0 para SALIR:");
-				int i = 1;
-				for (Rol r : Rol.values()) {
-					System.out.println(i + " " + r.getNombre());
-					i++;
-				}
-				in = new Scanner(System.in);
-				elecc = in.nextInt();
-				if (elecc == 0) {
-					System.out.println("¿Está seguro de que desea SALIR?");
-					if (Utilidades.leerBoolean()) {
-						System.out.println("¡ADIOS!");
-						return;
-					}
-				}
-				if (elecc >= 1 && elecc <= Rol.values().length)
-					correcto = true;
-				else
-					System.out.println("¡Valor invalido para el ROL seleccionado!");
-			} while (!correcto);
-			rol = Rol.values()[elecc - 1];
+//		 Ejercicio 2 examen 6
+		exportatJuniors();
+	
 
-			Credenciales cred; // Examen 4 Ejericicio 3B
-			boolean login = false;
-			switch (rol.ordinal()) {
-			case 0: // Rol.DIRECTIVA;
-			case 1: // Rol.MANAGER
-			case 2: // Rol.ATLETA;
-			case 3: // Rol.COLEGIADO;
-			case 4: // Rol.ADMIN;
-				do {
-					System.out.println("Introduzca sus credenciales de acceso.");
-					System.out.println("Introduzca su nombre de usuario:");
-					String usuario, password;
-					usuario = in.next();
-					System.out.println("Introduzca su contraseña:");
-					password = in.next();
-					cred = new Credenciales(usuario, password);
-					login = login(cred);
-					if (!login)
-						System.out.println("ERROR: Usuario o password incorrectos.");
-					else
-						System.out.println("Login correcto con rol " + rol.getNombre());
-				} while (!login);
-				break;
-			case 5: // Rol.INVITADO;
-				System.out.println("Ha ingresado con el rol " + rol.getNombre());
+	Datos.cerrarResultados();System.out.println("INICIO");
+
+	Scanner in;
+	int elecc = -1;
+	Rol rol; // Examen 4 Ejercicio 3A
+	boolean correcto = false;while(true)
+	{
+		System.out.println("Bienvenido al programa de gestión de la FEDERACIÓN DEPORTIVA:");
+		do {
+			System.out.println("Seleccione el id del tipo de usuario o pulse 0 para SALIR:");
+			int i = 1;
+			for (Rol r : Rol.values()) {
+				System.out.println(i + " " + r.getNombre());
+				i++;
 			}
+			in = new Scanner(System.in);
+			elecc = in.nextInt();
+			if (elecc == 0) {
+				System.out.println("¿Está seguro de que desea SALIR?");
+				if (Utilidades.leerBoolean()) {
+					System.out.println("¡ADIOS!");
+					return;
+				}
+			}
+			if (elecc >= 1 && elecc <= Rol.values().length)
+				correcto = true;
+			else
+				System.out.println("¡Valor invalido para el ROL seleccionado!");
+		} while (!correcto);
+		rol = Rol.values()[elecc - 1];
 
-			mostrarMenu(rol);
+		Credenciales cred; // Examen 4 Ejericicio 3B
+		boolean login = false;
+		switch (rol.ordinal()) {
+		case 0: // Rol.DIRECTIVA;
+		case 1: // Rol.MANAGER
+		case 2: // Rol.ATLETA;
+		case 3: // Rol.COLEGIADO;
+		case 4: // Rol.ADMIN;
+			do {
+				System.out.println("Introduzca sus credenciales de acceso.");
+				System.out.println("Introduzca su nombre de usuario:");
+				String usuario, password;
+				usuario = in.next();
+				System.out.println("Introduzca su contraseña:");
+				password = in.next();
+				cred = new Credenciales(usuario, password);
+				login = login(cred);
+				if (!login)
+					System.out.println("ERROR: Usuario o password incorrectos.");
+				else
+					System.out.println("Login correcto con rol " + rol.getNombre());
+			} while (!login);
+			break;
+		case 5: // Rol.INVITADO;
+			System.out.println("Ha ingresado con el rol " + rol.getNombre());
 		}
 
+		mostrarMenu(rol);
+	}
+
 	} // Final del main
+
+	/**
+	 * 
+	 */
+	private static void exportatJuniors() {
+		try {
+			// TODO Auto-generated method stub
+			File f = new File("juniors.dat");
+			FileOutputStream fos = new FileOutputStream(f);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+			for (Atleta a : Datos.ATLETAS) {
+
+				DatosPersona dp = a.getPersona();
+				if (dp.getFechaNac().isAfter(LocalDate.of(2000, 1, 1))) {
+					oos.writeObject(a);
+
+				}
+				oos.close();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {}
+	}
 
 	// Examen 3 Ejercicio 2 - Examen 4 Ejercicio 3C
 	private static void mostrarMenu(Rol rol) {
@@ -372,8 +415,39 @@ public class Principal4 {
 	}
 
 	private static boolean login(Credenciales cred) {
-		// Por el momento siempre devolverá true
-		return true;
+
+		boolean credencialcorrecta = false;
+		ObjectInputStream ois = null;
+		try {
+			File f = new File("credenciales.txt");
+			FileInputStream fis = new FileInputStream(f);
+			ois = new ObjectInputStream(fis);
+
+			while (true) {
+				Credenciales ce = (Credenciales) ois.readObject();
+
+				if (cred.getPassword() == ce.getPassword()) {
+					if (cred.getUsuario() == ce.getUsuario()) {
+						credencialcorrecta = true;
+					}
+				}
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				ois.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return credencialcorrecta;
+
 	}
 
 }

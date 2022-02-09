@@ -1,5 +1,9 @@
 package entidades;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 import utils.Datos;
@@ -105,5 +109,43 @@ public class Manager {
 	public String toString() {
 		return id + persona.getNombre() + "(" + persona.getNifnie() + ") del año " + persona.getFechaNac() + ", tfno1 :"
 				+ telefono + "tfno2 :" + persona.getTelefono();
+	}
+
+	public String data() {
+		String ret = "";
+		ret = persona.getId() + "|" + persona.getNombre() + "|" + persona.getNifnie() + "|" + persona.getFechaNac()
+				+ "|" + persona.getTelefono() + "|" + this.id + "|" + this.telefono + "|" + this.direccion;
+		return ret;
+	}
+
+	public static void exportamanagers() {
+		System.out.println("Guardamos los datos en managers.txt");
+
+		File fOut = new File("managers.txt");
+		FileWriter fw = null;
+		BufferedWriter bw = null;
+		String data;
+
+		try {
+			fw = new FileWriter(fOut);
+			bw = new BufferedWriter(fw);
+			// importando desde la clase datos
+			for (int i = 0; i < Datos.MANAGERS.length; i++) {
+				Manager m = new Manager();
+				m = Datos.MANAGERS[i];
+				bw.write(m.data() + "\n");
+				bw.close();
+
+			}
+		} catch (IOException e) {
+			{
+				e.printStackTrace();
+			}
+
+		} finally {
+
+		}
+
+		System.out.println("------------------------");
 	}
 }
