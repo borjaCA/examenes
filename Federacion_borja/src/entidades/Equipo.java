@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 public class Equipo extends Participante {
 	private long idEquipo;
 	private int anioinscripcion;
+	private String nombre;
 	private Manager manager;
 	private Atleta[] atletas;
 
@@ -28,6 +29,22 @@ public class Equipo extends Participante {
 	public long getId() {
 		return idEquipo;
 	}
+	public long getIdEquipo() {
+		return idEquipo;
+	}
+
+	public void setIdEquipo(long idEquipo) {
+		this.idEquipo = idEquipo;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
 	@Override
 	public void setId(long id) {
 		this.idEquipo = id;

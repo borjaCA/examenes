@@ -13,6 +13,7 @@ public class Manager {
 	private long id;
 	private String telefono;
 	private String direccion;
+	private String nombre;
 
 	private DatosPersona persona;
 
@@ -34,6 +35,18 @@ public class Manager {
 		this.telefono = telefono;
 		this.direccion = direccion;
 		this.persona = dp;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setPersona(DatosPersona persona) {
+		this.persona = persona;
 	}
 
 	public long getId() {

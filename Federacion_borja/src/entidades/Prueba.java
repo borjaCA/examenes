@@ -1,6 +1,7 @@
 package entidades;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class Prueba {
 	private LocalDate fecha; // solo fecha
 	private boolean individual; // indica si es individual o no (por equipos)
 	private Lugar lugar;
+	
 
 	private Colegiado[] arbitraje = new Colegiado[3];
 	private Resultado resultado = null;
@@ -198,6 +200,13 @@ public class Prueba {
 			this.resultado = r;
 			System.out.println("La prueba " + this.nombre + " ha quedado cerrada.");
 		}
+	}
+
+	public String data() {
+		String ret = "";
+		ret = id + "|" + nombre + "|" + fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "|" + lugar + "|"
+				+ this.isIndividual();
+		return ret;
 	}
 
 	@Override

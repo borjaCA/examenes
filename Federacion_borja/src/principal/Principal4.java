@@ -14,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import javax.annotation.processing.FilerException;
+
 import entidades.*;
 import utils.*;
 
@@ -23,68 +25,68 @@ public class Principal4 {
 
 //		 Ejercicio 2 examen 6
 		exportatJuniors();
-	
 
-	Datos.cerrarResultados();System.out.println("INICIO");
+		Datos.cerrarResultados();
+		System.out.println("INICIO");
 
-	Scanner in;
-	int elecc = -1;
-	Rol rol; // Examen 4 Ejercicio 3A
-	boolean correcto = false;while(true)
-	{
-		System.out.println("Bienvenido al programa de gestión de la FEDERACIÓN DEPORTIVA:");
-		do {
-			System.out.println("Seleccione el id del tipo de usuario o pulse 0 para SALIR:");
-			int i = 1;
-			for (Rol r : Rol.values()) {
-				System.out.println(i + " " + r.getNombre());
-				i++;
-			}
-			in = new Scanner(System.in);
-			elecc = in.nextInt();
-			if (elecc == 0) {
-				System.out.println("¿Está seguro de que desea SALIR?");
-				if (Utilidades.leerBoolean()) {
-					System.out.println("¡ADIOS!");
-					return;
-				}
-			}
-			if (elecc >= 1 && elecc <= Rol.values().length)
-				correcto = true;
-			else
-				System.out.println("¡Valor invalido para el ROL seleccionado!");
-		} while (!correcto);
-		rol = Rol.values()[elecc - 1];
-
-		Credenciales cred; // Examen 4 Ejericicio 3B
-		boolean login = false;
-		switch (rol.ordinal()) {
-		case 0: // Rol.DIRECTIVA;
-		case 1: // Rol.MANAGER
-		case 2: // Rol.ATLETA;
-		case 3: // Rol.COLEGIADO;
-		case 4: // Rol.ADMIN;
+		Scanner in;
+		int elecc = -1;
+		Rol rol; // Examen 4 Ejercicio 3A
+		boolean correcto = false;
+		while (true) {
+			System.out.println("Bienvenido al programa de gestión de la FEDERACIÓN DEPORTIVA:");
 			do {
-				System.out.println("Introduzca sus credenciales de acceso.");
-				System.out.println("Introduzca su nombre de usuario:");
-				String usuario, password;
-				usuario = in.next();
-				System.out.println("Introduzca su contraseña:");
-				password = in.next();
-				cred = new Credenciales(usuario, password);
-				login = login(cred);
-				if (!login)
-					System.out.println("ERROR: Usuario o password incorrectos.");
+				System.out.println("Seleccione el id del tipo de usuario o pulse 0 para SALIR:");
+				int i = 1;
+				for (Rol r : Rol.values()) {
+					System.out.println(i + " " + r.getNombre());
+					i++;
+				}
+				in = new Scanner(System.in);
+				elecc = in.nextInt();
+				if (elecc == 0) {
+					System.out.println("¿Está seguro de que desea SALIR?");
+					if (Utilidades.leerBoolean()) {
+						System.out.println("¡ADIOS!");
+						return;
+					}
+				}
+				if (elecc >= 1 && elecc <= Rol.values().length)
+					correcto = true;
 				else
-					System.out.println("Login correcto con rol " + rol.getNombre());
-			} while (!login);
-			break;
-		case 5: // Rol.INVITADO;
-			System.out.println("Ha ingresado con el rol " + rol.getNombre());
-		}
+					System.out.println("¡Valor invalido para el ROL seleccionado!");
+			} while (!correcto);
+			rol = Rol.values()[elecc - 1];
 
-		mostrarMenu(rol);
-	}
+			Credenciales cred; // Examen 4 Ejericicio 3B
+			boolean login = false;
+			switch (rol.ordinal()) {
+			case 0: // Rol.DIRECTIVA;
+			case 1: // Rol.MANAGER
+			case 2: // Rol.ATLETA;
+			case 3: // Rol.COLEGIADO;
+			case 4: // Rol.ADMIN;
+				do {
+					System.out.println("Introduzca sus credenciales de acceso.");
+					System.out.println("Introduzca su nombre de usuario:");
+					String usuario, password;
+					usuario = in.next();
+					System.out.println("Introduzca su contraseña:");
+					password = in.next();
+					cred = new Credenciales(usuario, password);
+					login = login(cred);
+					if (!login)
+						System.out.println("ERROR: Usuario o password incorrectos.");
+					else
+						System.out.println("Login correcto con rol " + rol.getNombre());
+				} while (!login);
+				break;
+			case 5: // Rol.INVITADO;
+				System.out.println("Ha ingresado con el rol " + rol.getNombre());
+			}
+
+			mostrarMenu(rol);
+		}
 
 	} // Final del main
 
@@ -111,8 +113,8 @@ public class Principal4 {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
 		}
-		finally {}
 	}
 
 	// Examen 3 Ejercicio 2 - Examen 4 Ejercicio 3C
@@ -321,7 +323,85 @@ public class Principal4 {
 			atleta1 = Atleta.nuevoAtleta();
 			break;
 		case 2: // opción 3.2
+
 			System.out.println("Ha seleccionado INSCRIPCIÓN de ATLETA en PRUEBA..");
+			boolean confirmacion = false;
+			Atleta at;
+			while (confirmacion != true) {
+				System.out.println("introduce el nuevo Atleta");
+				at = Atleta.nuevoAtleta();
+				System.out.println("El atleta introducido es:" + at.toString());
+				char resp = ' ';
+
+				System.out.println("¿Es correcto el atleta que has metido?");
+				if (Utilidades.leerBoolean()) {
+					confirmacion = true;
+				} else
+					confirmacion = false;
+			}
+						
+			File fichero = new File("pruebas.txt");
+			FileReader lector = null;
+			BufferedReader buffer = null;
+			try {
+				try {
+					lector = new FileReader(fichero);
+					buffer = new BufferedReader(lector);
+					String linea;
+					while ((linea = buffer.readLine()) != null) {
+						String[] campos = linea.split("\\|");
+						String idPrueba = campos[0];
+						String nombre = campos[1];
+						String fecha = campos[2];
+						String lugar = campos[3];
+						String  individual = campos [4];
+//							if ( individual ) {
+//								
+//							}
+				}
+				} finally {
+					if (buffer != null) {
+						buffer.close();
+					}
+					if (lector != null) {
+						lector.close();
+					}
+				}
+			} catch (FileNotFoundException e) {
+				System.out.println("Se ha producido una FileNotFoundException" + e.getMessage());
+			} catch (IOException e) {
+				System.out.println("Se ha producido una IOException" + e.getMessage());
+			} catch (Exception e) {
+				System.out.println("Se ha producido una Exception" + e.getMessage());
+			}
+			
+				
+			Prueba prueba = null;
+			valido = false;
+			long idPrueba = -1;
+			char resp = ' ';
+			do {
+				System.out.println("introduce el id de la prueba que quieras");
+				for (Prueba p : Datos.PRUEBAS) {
+					idPrueba = in.nextLong();
+
+					if (p.isIndividual() == true && idPrueba > 0) {
+						System.out.println("Quieres esta prueba");
+						p.setId(idPrueba);
+						prueba = Datos.PRUEBAS[(int) p.getId()];
+						resp = in.next().charAt(0);
+						if (resp == 's' && resp == 'S') {
+							valido = true;
+							File file = new File("inscrip_" + p.getId() + "_.dat");
+						} else
+							;
+
+						valido = false;
+					}
+					valido = false;
+				}
+			} while (!valido);
+
 			break;
 		default:
 		}
@@ -449,5 +529,46 @@ public class Principal4 {
 		return credencialcorrecta;
 
 	}
-
+	//ejercicio 3
+	
+//	String ret = "";
+//	File fichero = new File ("manager.txt");
+//	FileReader fr = null;
+//	BufferedReader bf = null;
+//	try {
+//		try {
+//			fr = new FileReader (fichero);
+//			bf = new BufferedReader (fr);
+//			String linea;
+//			while ((linea = bf.readLine()) != null) {
+//				String[] campos = linea.split("\\|");
+//				String idP = campos[0];
+//				String nomMa = campos[1];
+//				String docMa = campos[2];
+//				String fecNs = campos[3];
+//				String  tfPer = campos [4];
+//				String idMan = campos [5];
+//				String tlfMan = campos [6];
+//				String dirMana = campos [7];
+//				
+//				for (Equipo e : Datos.EQUIPOS) {
+//					if ( Long.valueOf(idMan) == e.getManager().getId()) {
+//						e.getAtletas();
+//						ret = "D./ DÑA " + nomMa + " con Nif : nie "+ docMa + "nacido" + fecNs + " representante " + e.getNombre() + " de id" + e.getId() + " durante " + e.getAnioinscripcion() + " el cual esta formado por :  " + '\t' + e.getAtletas().toString() + '\n' ;
+//					}
+//				}
+//			}
+//		}finally {
+//			if (bf!= null);
+//				bf.close();
+//		}
+//		if (fr!= null);
+//		fr.close();
+//	
+//	}
 }
+//NOSE PORQUE ME DA ERROR ESTE EJERCICIO PERO NO ME SALE QUITARLO Y TARDE MUCHO TIEMPO Y NO ME DIO A TIEMPO A HACER EL 2 
+	/*
+	 * EL SEGUNDO LO HARIA CON 3 IF DONDE IRIA LEYENDO CADA UNO Y MIRANDO SI LA CATEGORIA ES DE UNA O DE OTRA SI ES JUNIOR CREAR EL ARCHIVO JUNIOR Y ASI SUCESIVAMENTE ME PARECIO
+	 * PERO EL 1 ME LLEVO MUCHO TIEMPO PARA NO CONSEGUIR HACER NADA Y EN EL 3 TENGO UN MINIMO FALLO QUE NO SE COMO ARREGLARLO Y FIJO  QUE ES UNA TONTERIA
+	 */
