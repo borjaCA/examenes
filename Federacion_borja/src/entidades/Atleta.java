@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.Scanner;
 
 import utils.Datos;
+import utils.Utilidades;
 import validaciones.Validador;
 
-public class Atleta extends Participante implements Serializable{
+public class Atleta extends Participante implements Serializable {
 	/**
 	 * 
 	 */
@@ -102,40 +103,48 @@ public class Atleta extends Participante implements Serializable{
 		float peso = (float) 0.0;
 		Scanner in;
 		boolean valido = false;
+		boolean correcion = false;
 		// se le mete un validador al id para que siempre sea mayot de 0
 		do {
-			System.out.println("introduzca un id  >0");
-			in = new Scanner(System.in);
-			idAtleta = in.nextLong();
-			if (idAtleta > 0)
-				valido = true;
-			else
-				System.out.println("introduce un id mayor que cero");
+			do {
+				System.out.println("introduzca un id  >0");
+				in = new Scanner(System.in);
+				idAtleta = in.nextLong();
+				if (idAtleta > 0)
+					valido = true;
+				else
+					System.out.println("introduce un id mayor que cero");
 
-		} while (!valido);
-		// hacemos el validador de la direccion
-		valido = false;
-		do {
-			System.out.println("introdice una altura con mas de 1.00 m de altura");
-			altura = in.nextFloat();
-			if (altura > 1.00)
-				valido = true;
-			else
-				System.out.println("introduce una altura con más de 1.00 m de altura");
-		} while (!valido);
-		valido = false;
-		// validamos el numero de telefono a traves de los nuevos validadores que
-		// hicimosh
-		do {
-			System.out.println("introduce un peso mayor que  30.0 kg");
-			peso = in.nextFloat();
-			if (peso > 30.0)
-				valido = true;
-			else
-				System.out.println("introduce un peso mayor que 30.0");
+			} while (!valido);
+			// hacemos el validador de la direccion
+			valido = false;
+			do {
+				System.out.println("introdice una altura con mas de 1.00 m de altura");
+				altura = in.nextFloat();
+				if (altura > 1.00)
+					valido = true;
+				else
+					System.out.println("introduce una altura con más de 1.00 m de altura");
+			} while (!valido);
+			valido = false;
+			// validamos el numero de telefono a traves de los nuevos validadores que
+			// hicimosh
+			do {
+				System.out.println("introduce un peso mayor que  30.0 kg");
+				peso = in.nextFloat();
+				if (peso > 30.0)
+					valido = true;
+				else
+					System.out.println("introduce un peso mayor que 30.0");
 
-		} while (!valido);
-		ret = new Atleta(idAtleta, altura, peso);
+			} while (!valido);
+
+			ret = new Atleta(idAtleta, altura, peso);
+
+			System.out.println("es correcto estos datos");
+			correcion = Utilidades.leerBoolean();
+
+		} while (!correcion);
 		return ret;
 	}
 

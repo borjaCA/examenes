@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import javax.annotation.processing.FilerException;
@@ -302,6 +304,10 @@ public class Principal4 {
 		switch (elecc) {
 		case 1: // opción 2.1
 			System.out.println("Ha seleccionado CONFORMAR EQUIPO.");
+			Equipo eq;
+			eq = Equipo.nuevoEquipo();
+			redactarPrueba();
+
 			break;
 		case 2: // opción 2.2
 			System.out.println("Ha seleccionado INSCRIPCIÓN de EQUIPO en PRUEBA.");
@@ -339,7 +345,7 @@ public class Principal4 {
 				} else
 					confirmacion = false;
 			}
-						
+
 			File fichero = new File("pruebas.txt");
 			FileReader lector = null;
 			BufferedReader buffer = null;
@@ -354,11 +360,11 @@ public class Principal4 {
 						String nombre = campos[1];
 						String fecha = campos[2];
 						String lugar = campos[3];
-						String  individual = campos [4];
+						String individual = campos[4];
 //							if ( individual ) {
 //								
 //							}
-				}
+					}
 				} finally {
 					if (buffer != null) {
 						buffer.close();
@@ -374,8 +380,7 @@ public class Principal4 {
 			} catch (Exception e) {
 				System.out.println("Se ha producido una Exception" + e.getMessage());
 			}
-			
-				
+
 			Prueba prueba = null;
 			valido = false;
 			long idPrueba = -1;
@@ -529,46 +534,211 @@ public class Principal4 {
 		return credencialcorrecta;
 
 	}
-	//ejercicio 3
-	
-//	String ret = "";
-//	File fichero = new File ("manager.txt");
-//	FileReader fr = null;
-//	BufferedReader bf = null;
-//	try {
-//		try {
-//			fr = new FileReader (fichero);
-//			bf = new BufferedReader (fr);
-//			String linea;
-//			while ((linea = bf.readLine()) != null) {
-//				String[] campos = linea.split("\\|");
-//				String idP = campos[0];
-//				String nomMa = campos[1];
-//				String docMa = campos[2];
-//				String fecNs = campos[3];
-//				String  tfPer = campos [4];
-//				String idMan = campos [5];
-//				String tlfMan = campos [6];
-//				String dirMana = campos [7];
-//				
-//				for (Equipo e : Datos.EQUIPOS) {
-//					if ( Long.valueOf(idMan) == e.getManager().getId()) {
-//						e.getAtletas();
-//						ret = "D./ DÑA " + nomMa + " con Nif : nie "+ docMa + "nacido" + fecNs + " representante " + e.getNombre() + " de id" + e.getId() + " durante " + e.getAnioinscripcion() + " el cual esta formado por :  " + '\t' + e.getAtletas().toString() + '\n' ;
-//					}
-//				}
-//			}
-//		}finally {
-//			if (bf!= null);
-//				bf.close();
-//		}
-//		if (fr!= null);
-//		fr.close();
-//	
-//	}
+
+	/// Examen 7 Ejercicio 3
+	private static boolean login() {
+		boolean ret = false;
+		File fichero = new File("managers.txt");
+		FileReader lector = null;
+		BufferedReader buffer = null;
+		try {
+			try {
+				lector = new FileReader(fichero);
+				buffer = new BufferedReader(lector);
+				String linea;
+				while ((linea = buffer.readLine()) != null) {
+					String[] campos = linea.split("\\|");
+					/// <DatosPersona.id>|<DatosPersona.nombre>|<DatosPersona.documentacion>|<DatosPersona.fechaNac>|<DatosPersona.telefono>
+					/// |<Manager.id>|<Manager.telefono>|<Manager.direccion>
+					String DatosPersona_id = campos[0];
+					String DatosPersona_nombre = campos[1];
+					String DatosPersona_documentacion = campos[2];
+					String DatosPersona_fechaNac = campos[3];
+					String datosPersona_telefono = campos[4];
+
+					String Manager_id = campos[5];
+					String Manager_telefono = campos[6];
+					String Manager_direccion = campos[7];
+					boolean representaEquipo = false;
+					Equipo equipoRepresentado = null;
+					for (Equipo e : Datos.EQUIPOS) {
+						if (e.getManager().getId() == Long.valueOf(Manager_id)) {
+							representaEquipo = true;
+							equipoRepresentado = e;
+							break;
+						}
+					}
+					if (!representaEquipo)
+						System.out.println("El manager " + DatosPersona_nombre + " de id " + Manager_id
+								+ " no representa a ningún equipo.");
+					else {
+						String cad = "";
+						cad += "D./Dña. " + DatosPersona_nombre + " con NIF:NIE " + DatosPersona_documentacion
+								+ " nacido el " + DatosPersona_fechaNac + " representa al equipo "
+								+ equipoRepresentado.getNombre() + " de id " + equipoRepresentado.getId()
+								+ " durante el año " + equipoRepresentado.getAnioinscripcion()
+								+ ", el cual está conformado por lossiguientes atletas:";
+						for (Atleta a : equipoRepresentado.getAtletas())
+							cad += "\t" + a.toString() + "\n";
+						System.out.println(cad);
+					}
+				}
+			} finally {
+				if (buffer != null) {
+					buffer.close();
+				}
+				if (lector != null) {
+					lector.close();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Se ha producido una FileNotFoundException" + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Se ha producido una IOException" + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("Se ha producido una Exception" + e.getMessage());
+		}
+		return ret;
+	}
+
+//APARTADO B Y C DEL 1
+	public static void redactarPrueba() {
+		Scanner teclado = new Scanner(System.in);
+		boolean ret = false;
+		File fichero = new File("pruebas.txt");
+		FileReader lector = null;
+		BufferedReader buffer = null;
+		int subelecc = -1;
+		boolean valido = false;
+		Equipo nuevo = Equipo.nuevoEquipo();
+		Prueba pruebaSelecc = null;
+		try {
+			Prueba[] colectivas = new Prueba[256];
+			int i = 0;
+			try {
+				lector = new FileReader(fichero);
+				buffer = new BufferedReader(lector);
+				String linea;
+				while ((linea = buffer.readLine()) != null) {
+					String[] campos = linea.split("\\|");
+					long idPrueba = Long.valueOf(campos[0]);
+					String nombrePrueba = campos[1];
+					LocalDate fecha = LocalDate.parse(campos[2], DateTimeFormatter.ofPattern("dd/MM/YYYY"));
+					String lugarString = campos[3];
+
+					Lugar lugar = null;
+					for (Lugar l : Lugar.values()) {
+						if (l.name().equalsIgnoreCase(lugarString)) {
+							lugar = l;
+						}
+					}
+					boolean individual = Boolean.valueOf(campos[4]);
+					Prueba pr = new Prueba(idPrueba, nombrePrueba, fecha, lugar, individual);
+					if (pr.isIndividual()) {
+						System.out.println("" + pr);
+						colectivas[i] = pr;
+						i++;
+					}
+				}
+
+				do {
+					System.out.println("Introduzca el id de la prueba en que desea inscribirse:");
+					subelecc = teclado.nextInt();
+					for (int j = 0; j < i; j++) {
+						if (((Prueba) colectivas[j]).getId() == subelecc) {
+
+							pruebaSelecc = colectivas[j];
+							valido = true;
+							break;
+						}
+					}
+					if (!valido) {
+						System.out.println("El valor " + subelecc
+								+ " no es válido. Se le mostrarán de nuevo las pruebas colectivas:");
+						for (Prueba aux : colectivas) {
+							if (aux != null) {
+								System.out.println("" + aux);
+							}
+						}
+					} else {
+						System.out.println("Se ha elegido la prueba de id:" + subelecc + ". ¿Es correcto?");
+						if (valido = Utilidades.leerBoolean()) {
+							break;
+						} else {
+							System.out.println("Se le mostrarán de nuevo las pruebas colectivas:");
+							for (Prueba aux : colectivas) {
+								if (aux != null) {
+									System.out.println("" + aux);
+								}
+							}
+						}
+					}
+				} while (!valido);
+
+			} finally {
+				if (buffer != null) {
+					buffer.close();
+				}
+				if (lector != null) {
+					lector.close();
+				}
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Se ha producido una FileNotFoundException" + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Se ha producido una IOException" + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("Se ha producido una Exception" + e.getMessage());
+		}
+		valido = false;
+		String path = "inscrip_" + pruebaSelecc.getId() + "_" + nuevo.getManager().getPersona().getNifnie().mostrar()
+				+ ".dat";
+		try {
+			FileOutputStream ficheroInscrip = new FileOutputStream(path, false);
+			ObjectOutputStream escritor = new ObjectOutputStream(ficheroInscrip);
+			escritor.writeObject((Equipo) nuevo);
+			escritor.writeObject((Long) pruebaSelecc.getId());
+			LocalDateTime ahora = LocalDateTime.now();
+			escritor.writeObject((LocalDateTime) ahora);
+			escritor.flush();
+			valido = true;
+			escritor.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Se ha producido una FileNotFoundException" + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("Se ha producido una IOException" + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("Se ha producido una Exception" + e.getMessage());
+		}
+
+		if (!valido) {
+			System.out.println("ERROR: No se creó el fichero con la inscripcion.");
+		} else {
+			try {
+				File ficheroLeido = new File(path);
+				FileInputStream ficheroInscrip = new FileInputStream(ficheroLeido);
+				ObjectInputStream lectorFichInsc = new ObjectInputStream(ficheroInscrip);
+				Equipo equipoLeido = (Equipo) lectorFichInsc.readObject();
+				Long idPruebaLeido = (Long) lectorFichInsc.readObject();
+				LocalDateTime fechahoraLeida = (LocalDateTime) lectorFichInsc.readObject();
+				System.out.println("Se ha creado el fichero " + path + " a "
+						+ fechahoraLeida.format(DateTimeFormatter.ofPattern("dd/MM/YY hh:mm:ss"))
+						+ ",  que el id del  equipo " + equipoLeido.getId() + " de nombre "
+						+ equipoLeido.getManager().getPersona().getNombre() + " y NIF/NIE "
+						+ equipoLeido.getManager().getPersona().getNifnie().mostrar() + " queda"
+						+ "inscrito en la prueba " + idPruebaLeido + " de nombre " + pruebaSelecc.getNombre()
+						+ " celebrada en " + pruebaSelecc.getLugar().getNombre() + " el día "
+						+ pruebaSelecc.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/YYYY")) + ".");
+				valido = true;
+				lectorFichInsc.close();
+			} catch (FileNotFoundException e) {
+				System.out.println("Se ha producido una FileNotFoundException" + e.getMessage());
+			} catch (IOException e) {
+				System.out.println("Se ha producido una IOException" + e.getMessage());
+			} catch (Exception e) {
+				System.out.println("Se ha producido una Exception" + e.getMessage());
+			}
+		}
+
+	}
 }
-//NOSE PORQUE ME DA ERROR ESTE EJERCICIO PERO NO ME SALE QUITARLO Y TARDE MUCHO TIEMPO Y NO ME DIO A TIEMPO A HACER EL 2 
-	/*
-	 * EL SEGUNDO LO HARIA CON 3 IF DONDE IRIA LEYENDO CADA UNO Y MIRANDO SI LA CATEGORIA ES DE UNA O DE OTRA SI ES JUNIOR CREAR EL ARCHIVO JUNIOR Y ASI SUCESIVAMENTE ME PARECIO
-	 * PERO EL 1 ME LLEVO MUCHO TIEMPO PARA NO CONSEGUIR HACER NADA Y EN EL 3 TENGO UN MINIMO FALLO QUE NO SE COMO ARREGLARLO Y FIJO  QUE ES UNA TONTERIA
-	 */

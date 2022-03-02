@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import utils.Datos;
+import utils.Utilidades;
 import validaciones.Validador;
 
 public class Manager {
@@ -81,40 +82,46 @@ public class Manager {
 	public static Manager nuevoManager() {
 		Manager ret = null;
 		long id = -1;
-		String direccion = " ";
-		String telefono = " ";
+		String telefono = "";
+		String direccion = "";
+		DatosPersona dp = null;
 		Scanner in;
 		boolean valido = false;
-		// se le mete un validador al id para que siempre sea mayot de 0
 		do {
-			System.out.println("introduzca un id  >0");
+			System.out.println("Introduzca el id del nuevo mánager:");
 			in = new Scanner(System.in);
-			id = in.nextLong();
+			id = in.nextInt();
 			if (id > 0)
 				valido = true;
 			else
-				System.out.println("introduce un id mayor que cero");
-
+				System.out.println("Valor incorrecto para el identificador.");
 		} while (!valido);
-		// hacemos el validador de la direccion
+
 		valido = false;
 		do {
-			System.out.println("introdice una direccion con mas de 5 letras");
-			direccion = in.next();
-			if (direccion.length() > 5)
-				valido = true;
-			else
-				System.out.println("introduce una direccion con mas de 5 letras");
+			in = new Scanner(System.in);
+			System.out.println("Introduzca el telefono de empresa del nuevo mánager");
+			telefono = in.nextLine();
+			valido = Validador.validarTelefono(telefono);
+			if (!valido)
+				System.out.println("ERROR: El valor introducido para el teéfono no es válido.");
 		} while (!valido);
-		boolean validatlf = false;
-		// validamos el numero de telefono a traves de los nuevos validadores que
-		// hicimos
+
+		valido = false;
 		do {
-			System.out.println("introduce un telefono que sea correcro");
-			telefono = in.next();
-			validatlf = Validador.validarNIE(telefono);
-		} while (!validatlf);
-		ret = new Manager(id, direccion, telefono);
+			in = new Scanner(System.in);
+			System.out.println("Introduzca la dirección del nuevo mánager:");
+			direccion = in.next();
+			valido = Validador.validarDireccion(direccion);
+			if (!valido)
+				System.out.println("ERROR: El valor introducido para la dirección no es válido.");
+		} while (!valido);
+
+		System.out.println("Introduzca ahora los datos personales:");
+		in = new Scanner(System.in);
+		dp = DatosPersona.nuevaPersona();
+
+		ret = new Manager(id, telefono, direccion, dp);
 		return ret;
 	}
 
