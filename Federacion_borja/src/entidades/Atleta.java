@@ -1,5 +1,6 @@
 package entidades;
 //esto no importa
+//segunda prueba
 import java.io.Serializable;
 import java.util.Scanner;
 
